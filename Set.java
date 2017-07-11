@@ -10,25 +10,28 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Set {
+
     //Instance variables
     private String stroke;
     private String distance;
     private String repeated;
     private int repeatedInt;
-    private String interval;
+    private String intervalMins;
+    private String intervalSecs;
     private int intervalInt;
     private Timer timer;
     private int delay;
     private int period;
     //Constructor
-    Set(String pStroke, String pDistance, String pRepeated, String pInterval){
+    Set(String pStroke, String pDistance, String pRepeated, String pIntervalMins, String pIntervalSecs){
         //Sets all of the instance variables to the values passed
         this.stroke = pStroke;
         this.distance = pDistance;
         this.repeated = pRepeated;
         this.repeatedInt = Integer.parseInt(pRepeated);
-        this.interval = pInterval;
-        this.intervalInt = Integer.parseInt(this.interval);
+        this.intervalMins = pIntervalMins;
+        this.intervalSecs = pIntervalSecs;
+        //this.intervalInt = Integer.parseInt(this.interval);
         //Creates a delay period, a time period and a timer object in order to
         //track time
         delay = 1000;
@@ -41,22 +44,29 @@ public class Set {
         //Schedules a new Timer task using an anonymous inner class
         timer.scheduleAtFixedRate(new TimerTask()
         {
-            int minutes = getIntervalInt() / 60;
-            int seconds = getIntervalInt() % 60;
+            int minutes = Integer.parseInt(getIntervalMins());
+            int seconds = Integer.parseInt(getIntervalSecs());         
+//            int minutes = getIntervalInt() / 60;
+//            int seconds = getIntervalInt() % 60;
             public void run()
             {
-                //Loops through until the seconds and minutes are depleted
-                while (minutes >0 && seconds >0)
+                while (repeatedInt !=0)
                 {
-                    //Loops the seconds variable back to the beginning of the next minute
-                    if ((seconds == 0))
+                    //Loops through until the seconds and minutes are depleted
+                    while (minutes >0 && seconds >0)
                     {
-                        seconds = 60;
-                        minutes--;
+                        //Loops the seconds variable back to the beginning of the next minute
+                        if ((seconds == 0))
+                        {
+                            seconds = 60;
+                            minutes--;
+                        }
+                        //Decreases one second
+                        seconds--;
                     }
-                    //Decreases one second
-                    seconds--;
+                    repeatedInt--;
                 }
+                
             }
         }, delay, period);
     }
@@ -90,16 +100,22 @@ public class Set {
     }
 
     /**
-     * @return the interval
-     */
-    public String getInterval() {
-        return interval;
-    }
-
-    /**
      * @return the intervalInt
      */
     public int getIntervalInt() {
         return intervalInt;
+    }
+    /**
+     * @return the intervalMins
+     */
+    public String getIntervalMins() {
+        return intervalMins;
+    }
+
+    /**
+     * @return the intervalSecs
+     */
+    public String getIntervalSecs() {
+        return intervalSecs;
     }
 }
